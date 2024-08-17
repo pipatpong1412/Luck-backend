@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  card_id  String    @unique @db.VarChar(13)
+  password String    @db.VarChar(72)
+  name     String
+  lastname String
+  email    String
+  Booking  Booking[]
+  role     Role      @default(USER)
+
+  @@map("users")
+}
+
+enum BookingStatus {
+  PENDING
+  RESERVED
+  CANCELED
+  APPROVED
+}
+
+model Booking {
+  id       Int            @id @default(autoincrement())
+  datetime DateTime       @db.DateTime()
+  phone    String         @db.VarChar(10)
+  disease  String
+  user     User           @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user_id  Int
+  status   BookingStatus? @default(PENDING)
+  notes    String?
+  seen     Boolean?       @default(false)
+
+  @@map("bookings")
+}
+
+enum Role {
+  ADMIN
+  USER
+  DOCTOR
+}
