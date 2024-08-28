@@ -60,6 +60,7 @@ exports.creacteBooking = async (req, res, next) => {
 exports.statusReserve = async (req, res, next) => {
     const { bookingId } = req.params
     const { status, notes, seen } = req.body
+
     try {
         const booking = await db.booking.update({
             where: {
@@ -98,8 +99,7 @@ exports.getResevedId = async (req, res, next) => {
 
 exports.editRerved = async (req, res, next) => {
     const { bookingId } = req.params;
-    const { phone, disease } = req.body;
-
+    const { phone, disease, datetime } = req.body;
     try {
         const updatedBooking = await db.booking.update({
             where: {
@@ -107,7 +107,8 @@ exports.editRerved = async (req, res, next) => {
             },
             data: {
                 phone,
-                disease
+                disease,
+                datetime
             }
         });
 
